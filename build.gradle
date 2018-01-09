@@ -1,0 +1,68 @@
+import com.wix.mysql.EmbeddedMysql
+import com.wix.mysql.distribution.Version
+
+
+buildscript {
+	ext {
+		kotlinVersion = '1.2.0'
+		springBootVersion = '1.5.9.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		classpath('com.wix:wix-embedded-mysql:3.0.0')
+	}
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'io.github.bu3'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+compileKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
+	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+
+	runtime('mysql:mysql-connector-java')
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+def mysql
+task startMysql {
+	println '>>>>>>>> Start Mysql'
+	mysql = EmbeddedMysql.anEmbeddedMysql(Version.v5_7_latest)
+			.addSchema("acme")
+			.start()
+}
+
+task stopMysql << {
+	println '>>>>>>>> Stop MySql'
+	if(mysql != null) {
+		mysql.stop()
+	}
+}
+
+test.dependsOn startMysql
+
+test.finalizedBy stopMysql

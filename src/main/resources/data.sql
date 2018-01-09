@@ -1,0 +1,1 @@
+INSERT INTO EMPLOYEES(data) VALUES ('{"employeeId":1,"name":"John Doe", "location":"Dublin"}')
