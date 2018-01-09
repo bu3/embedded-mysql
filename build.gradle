@@ -50,19 +50,28 @@ dependencies {
 
 def mysql
 task startMysql {
-	println '>>>>>>>> Start Mysql'
+	println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+	println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+	println '>>>>>>>> Starting embedded MySql >>>>>>>>'
+	println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+	println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 	mysql = EmbeddedMysql.anEmbeddedMysql(Version.v5_7_latest)
 			.addSchema("acme")
 			.start()
 }
 
-task stopMysql << {
-	println '>>>>>>>> Stop MySql'
-	if(mysql != null) {
-		mysql.stop()
+task stopMysql {
+	doLast {
+		if(mysql != null) {
+			println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+			println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+			println '>>>>>>>> Stopping embedded MySql >>>>>>>>'
+			println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+			println '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+			mysql.stop()
+		}
 	}
 }
 
 test.dependsOn startMysql
-
 test.finalizedBy stopMysql
