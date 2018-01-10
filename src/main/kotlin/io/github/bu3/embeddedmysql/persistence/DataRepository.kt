@@ -9,7 +9,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Lob
 
-@Entity(name = "EMPLOYEES")
+@Entity(name = "employees")
 data class Employee(
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
@@ -25,7 +25,7 @@ data class Employee(
 
 interface DataRepository : CrudRepository<Employee, Long> {
 
-    @Query("select id, data from EMPLOYEES e where JSON_SEARCH(e.data, 'all', ?2, NULL, ?1) is not null", nativeQuery = true)
+    @Query("select id, data from employees e where JSON_SEARCH(e.data, 'all', ?2, NULL, ?1) is not null", nativeQuery = true)
     fun search(path:String, value: String): List<Employee>
 
 }
